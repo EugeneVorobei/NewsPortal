@@ -18,7 +18,8 @@ class Author(models.Model):
     def update_rating(self):
         rating_post_author = self.post_set.all().aggregate(Sum('rating_post'))['rating_post__sum']
         rating_comment = self.comment_set.all().aggregate(Sum('rating_comment'))['rating_comment__sum']
-        rating_comment_post = Comment.objects.filter(post__author__pk=self.pk).aggregate(Sum('rating_comment'))['rating_comment__sum']
+        rating_comment_post = Comment.objects.filter(post__author__pk=self.pk).aggregate(Sum('rating_comment'))[
+            'rating_comment__sum']
         self.rating_user = rating_post_author * 3 + rating_comment + rating_comment_post
         self.save()
 
@@ -46,6 +47,9 @@ class Post(models.Model):
 
     def preview(self):
         return self.text_post[:124] + '...'
+
+    def __str__(self):
+        return f'{self.header_post.title()}: {self.text_post[:20]}'
 
 
 class PostCategory(models.Model):
