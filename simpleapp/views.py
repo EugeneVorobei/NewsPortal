@@ -23,12 +23,6 @@ class NewsList(ListView):
             **super().get_context_data(*args, **kwargs),
             'filter': self.get_filter(),
         }
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['time_now'] = datetime.utcnow()
-    #     context['next_news'] = 'Новые новости!'
-    #     context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
-    #     return context
 
 
 class OneNewsDetail(DetailView):
