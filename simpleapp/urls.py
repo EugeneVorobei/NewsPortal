@@ -1,15 +1,12 @@
 from django.urls import path
-# Импортируем созданные нами представления
-from .views import NewsList, OneNewsDetail
+from .views import NewsList, OneNewsDetail, Search, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView
 
 urlpatterns = [
-    # path — означает путь.
-    # В данном случае путь ко всем товарам у нас останется пустым.
-    # Т.к. наше объявленное представление является классом,
-    # а Django ожидает функцию, нам надо представить этот класс в виде view.
-    # Для этого вызываем метод as_view.
     path('', NewsList.as_view()),
-    # pk — это первичный ключ товара, который будет выводиться у нас в шаблон
-    # int — указывает на то, что принимаются только целочисленные значения
-    path('<int:pk>', OneNewsDetail.as_view()),
+    path('<int:pk>/', OneNewsDetail.as_view()),
+    path('search/', Search.as_view()),
+    path('<int:pk>/', PostDetailView.as_view(), name='post_detail'),
+    path('add/', PostCreateView.as_view(), name='post_add'),
+    path('<int:pk>/edit', PostUpdateView.as_view(), name='post_update'),
+    path('<int:pk>/delete', PostDeleteView.as_view(), name='post_delete'),
 ]

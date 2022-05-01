@@ -1,0 +1,35 @@
+{% extends 'flatpages/default.html' %}
+ 
+{% block title %} Новости {% endblock title %}
+ 
+{% block content %}
+<h2>Вы действительно хотите удалить статью или новость?</h2>
+<table>
+    <thead>
+        <th>
+            Заголовок
+        </th>
+        <th>
+            Дата публикации
+        </th>
+        <th>
+            Превью
+        </th>
+    </thead>
+    <tr>
+        <td>
+            {{ post.header_post|truncatewords:3 }}
+        </td>
+        <td>
+            {{ post.date|date:'d M Y' }}
+        </td>
+        <td>
+            {{ post.text_post|truncatechars:20 }}
+        </td>
+    </tr>
+</table>
+ 
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="подтвердить"></form>
+{% endblock content %} 

@@ -15,6 +15,9 @@ class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     rating_user = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.user}'
+
     def update_rating(self):
         rating_post_author = self.post_set.all().aggregate(Sum('rating_post'))['rating_post__sum']
         rating_comment = self.comment_set.all().aggregate(Sum('rating_comment'))['rating_comment__sum']
@@ -26,6 +29,9 @@ class Author(models.Model):
 
 class Category(models.Model):
     category_name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return f'{self.category_name}'
 
 
 class Post(models.Model):
@@ -50,6 +56,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.header_post.title()}: {self.text_post[:20]}'
+
+    def get_absolute_url(self):
+        return f'/posts/{self.id}'
 
 
 class PostCategory(models.Model):

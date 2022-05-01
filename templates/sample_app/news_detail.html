@@ -1,0 +1,32 @@
+{% extends 'flatpages/default.html' %}
+
+{% load censor %}
+
+{% block title %} Новости {% endblock title %}
+ 
+{% block content %}
+<table>
+    <thead>
+        <th>
+            Заголовок
+        </th>
+        <th>
+            Дата публикации
+        </th>
+        <th>
+            Текст
+        </th>
+    </thead>
+    <tr>
+        <td>
+            {{ post.header_post }}
+        </td>
+        <td>
+            {{ post.date|date:'d M Y' }}
+        </td>
+        <td>
+            {{ post.text_post|censor }}
+        </td>
+    </tr>
+</table>
+{% endblock content %}
