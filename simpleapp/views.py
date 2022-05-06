@@ -1,5 +1,6 @@
 from datetime import datetime
-from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView, TemplateView
 from .models import Post
 from .filters import PostFilter
 from .forms import PostForm
@@ -56,12 +57,12 @@ class PostDetailView(DetailView):
     queryset = Post.objects.all()
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     template_name = 'sample_app/news_add.html'
     form_class = PostForm
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'sample_app/news_add.html'
     form_class = PostForm
 
@@ -70,7 +71,16 @@ class PostUpdateView(UpdateView):
         return Post.objects.get(pk=id)
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'sample_app/news_delete.html'
     queryset = Post.objects.all()
     success_url = '/posts/'
+
+
+# class IndexView(LoginRequiredMixin, TemplateView):
+#     template_name = 'news.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
+#         return context

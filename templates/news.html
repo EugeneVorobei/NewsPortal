@@ -47,6 +47,10 @@ News
        <h2>Новостей нет!</h2>
    {% endif %}
 
+{% if is_not_author %}
+<button> <a href="sign/upgrade/"> Хочу Premium!</a> </button>
+{% endif %}
+
 <a href="{% url 'post_add' %}">Добавить новость или статью</a> <br>
 
 {% if is_paginated %}

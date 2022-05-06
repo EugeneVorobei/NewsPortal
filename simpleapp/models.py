@@ -58,7 +58,7 @@ class Post(models.Model):
         return f'{self.header_post.title()}: {self.text_post[:20]}'
 
     def get_absolute_url(self):
-        return f'/posts/{self.id}'
+        return f'/news/{self.id}'
 
 
 class PostCategory(models.Model):
