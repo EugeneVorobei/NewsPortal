@@ -1,6 +1,6 @@
 from datetime import datetime
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView, TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
 from .models import Post
 from .filters import PostFilter
 from .forms import PostForm
@@ -20,10 +20,13 @@ class NewsList(ListView):
         return self.get_filter().qs
 
     def get_context_data(self, *args, **kwargs):
-        return {
-            **super().get_context_data(*args, **kwargs),
-            'filter': self.get_filter(),
-        }
+        context = super().get_context_data(**kwargs)
+        context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
+        # return {
+        #     **super().get_context_data(*args, **kwargs),
+        #     'filter': self.get_filter(),
+        # }
+        return context
 
 
 class OneNewsDetail(DetailView):
@@ -57,12 +60,14 @@ class PostDetailView(DetailView):
     queryset = Post.objects.all()
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = ('simpleapp.add_post',)
     template_name = 'sample_app/news_add.html'
     form_class = PostForm
 
 
-class PostUpdateView(LoginRequiredMixin, UpdateView):
+class PostUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('simpleapp.change_post',)
     template_name = 'sample_app/news_add.html'
     form_class = PostForm
 
@@ -71,16 +76,8 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         return Post.objects.get(pk=id)
 
 
-class PostDeleteView(LoginRequiredMixin, DeleteView):
+class PostDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('simpleapp.delete_post',)
     template_name = 'sample_app/news_delete.html'
     queryset = Post.objects.all()
     success_url = '/posts/'
-
-
-# class IndexView(LoginRequiredMixin, TemplateView):
-#     template_name = 'news.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
-#         return context

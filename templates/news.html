@@ -9,7 +9,7 @@ News
 {% block content %}
    <h1>Новости</h1>
    <h3>{{ time_now|date:'d M Y' }}</h3>
-<h3> Количество новостей {{ news|length }} </h3>
+<h3> Количество новостей на странице {{ news|length }} </h3>
    <h3> {{ next_news|default_if_none:"Чуть позже сообщим о свежих новостях!" }} </h3>
 
    <hr>
@@ -47,11 +47,11 @@ News
        <h2>Новостей нет!</h2>
    {% endif %}
 
-{% if is_not_author %}
-<button> <a href="sign/upgrade/"> Хочу Premium!</a> </button>
+{% if is_not_authors %}
+<button> <a href="sign/upgrade/"> Хочу стать Автором!</a> </button>
 {% endif %}
 
-<a href="{% url 'post_add' %}">Добавить новость или статью</a> <br>
+<button> <a href="{% url 'post_add' %}">Добавить новость или статью</a> </button> <br>
 
 {% if is_paginated %}
 
