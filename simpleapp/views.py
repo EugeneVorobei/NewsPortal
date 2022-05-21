@@ -1,7 +1,9 @@
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
-from .models import Post
+from .models import Post, Category
 from .filters import PostFilter
 from .forms import PostForm
 
@@ -22,17 +24,7 @@ class NewsList(ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
-        # return {
-        #     **super().get_context_data(*args, **kwargs),
-        #     'filter': self.get_filter(),
-        # }
         return context
-
-
-class OneNewsDetail(DetailView):
-    model = Post
-    template_name = 'onenews.html'
-    context_object_name = 'onenews'
 
 
 class Search(ListView):
@@ -56,19 +48,33 @@ class Search(ListView):
 
 
 class PostDetailView(DetailView):
-    template_name = 'sample_app/news_detail.html'
+    template_name = 'news_detail.html'
     queryset = Post.objects.all()
+
+    def get_context_data(self, **kwargs):
+        # context = super().get_context_data(**kwargs)
+        # context['user_is_subscribed'] = not self.request.user.groups.filter(name='authors').exists()
+        # return context
+        context = super().get_context_data(**kwargs)
+        id = self.kwargs.get('pk')
+        categories = []
+        post = Post.objects.get(pk=id)
+        for cat in post.category.all():
+            if self.request.user in cat.subscribers.all():
+                categories.append(cat)
+        context['user_category'] = categories
+        return context
 
 
 class PostCreateView(PermissionRequiredMixin, CreateView):
     permission_required = ('simpleapp.add_post',)
-    template_name = 'sample_app/news_add.html'
+    template_name = 'news_add.html'
     form_class = PostForm
 
 
 class PostUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = ('simpleapp.change_post',)
-    template_name = 'sample_app/news_add.html'
+    template_name = 'news_add.html'
     form_class = PostForm
 
     def get_object(self, **kwargs):
@@ -78,6 +84,21 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
 
 class PostDeleteView(PermissionRequiredMixin, DeleteView):
     permission_required = ('simpleapp.delete_post',)
-    template_name = 'sample_app/news_delete.html'
+    template_name = 'news_delete.html'
     queryset = Post.objects.all()
     success_url = '/posts/'
+
+
+@login_required
+def subscribe(request, **kwargs):
+    user = request.user
+    cat_id = kwargs['pk']
+    category = Category.objects.get(pk=int(cat_id))
+
+    if user not in category.subscribers.all():
+        category.subscribers.add(user)
+
+    else:
+        category.subscribers.remove(user)
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))

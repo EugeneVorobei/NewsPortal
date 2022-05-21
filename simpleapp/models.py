@@ -16,7 +16,7 @@ class Author(models.Model):
     rating_user = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.user}'
+        return f'{self.user.username}'
 
     def update_rating(self):
         rating_post_author = self.post_set.all().aggregate(Sum('rating_post'))['rating_post__sum']
@@ -29,6 +29,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     category_name = models.CharField(max_length=255, unique=True)
+    subscribers = models.ManyToManyField(User, related_name='subscribers')
 
     def __str__(self):
         return f'{self.category_name}'
@@ -37,11 +38,11 @@ class Category(models.Model):
 class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     select = models.CharField(max_length=2, choices=POSITIONS, default=news)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField('дата создания', auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')
-    header_post = models.CharField(max_length=255)
-    text_post = models.TextField()
-    rating_post = models.IntegerField(default=0)
+    header_post = models.CharField('название', max_length=255)
+    text_post = models.TextField('текст')
+    rating_post = models.IntegerField('рейтинг', default=0)
 
     def like(self):
         self.rating_post += 1
@@ -67,11 +68,14 @@ class PostCategory(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    text_comment = models.TextField()
-    date_comment = models.DateTimeField(auto_now_add=True)
-    rating_comment = models.IntegerField(default=0)
+    text_comment = models.TextField('текст')
+    date_comment = models.DateTimeField('дата', auto_now_add=True)
+    rating_comment = models.IntegerField('рейтинг', default=0)
+
+    def __str__(self):
+        return self.post.username
 
     def like(self):
         self.rating_comment += 1

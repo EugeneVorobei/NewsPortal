@@ -41,11 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django_extensions',
     'django_filters',
+    'django_apscheduler',
+    'simpleapp.apps.SimpleappConfig',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'simpleapp',
     'sign',
 ]
 
@@ -152,5 +153,26 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_FORMS = {'signup': 'sign.forms.BasicSignupForm'}
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_FORMS = {'signup': 'sign.models.CommonSignupForm'}
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'EvgeniVorobey'
+EMAIL_HOST_PASSWORD = 'Yfeufl5493'
+EMAIL_USE_SSL = True
+
+ADMINS = [
+    ('Name', 'mail@mail.com'),
+]
+
+SERVER_EMAIL = 'mail@yandex.ru'  # адрес отправителя
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru' # если вы используете Яндекс, то не забудьте добавить + ‘@yandex.ru’
+
+# формат даты, которую будет воспринимать наш задачник (вспоминаем модуль по фильтрам)
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+# если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds

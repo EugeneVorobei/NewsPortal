@@ -1,0 +1,57 @@
+{% extends 'flatpages/default.html' %}
+
+{% load censor %}
+
+{% block title %} Новости {% endblock title %}
+ 
+{% block content %}
+<table>
+    <thead>
+        <th>
+            Заголовок
+        </th>
+        <th>
+            Дата публикации
+        </th>
+        <th>
+            Текст
+        </th>
+    </thead>
+    <tr>
+        <td>
+            {{ post.header_post }}
+        </td>
+        <td>
+            {{ post.date|date:'d M Y' }}
+        </td>
+        <td>
+            {{ post.text_post|censor }}
+        </td>
+    </tr>
+</table>
+<br>
+<p>Автор: <b>{{ post.author }}</b></p>
+
+{% if request.user.is_authenticated %}
+    <p>
+        Вы можете подписаться на новости категории:
+            {% for category in post.category.all %}
+                {% if not category in user_category %}
+                    <a href="{% url 'subscribe' category.pk %}"><br>{{ category.category_name }}</a>
+                {% else %}
+                    <br>{{ category.category_name }}
+                {% endif %}
+            {% endfor %}
+
+        <h6>Ваши текущие подписки (для того что-бы отписаться, нажмите на название подписки):</h6>
+            {% for category in post.category.all %}
+                {% if category in user_category %}
+                    <a href="{% url 'subscribe' category.pk %}"><br>{{ category.category_name }}</a>
+                {% endif %}
+            {% endfor %}
+    </p>
+{% endif %}
+
+{% endblock content %}
+
+
