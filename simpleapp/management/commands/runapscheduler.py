@@ -19,6 +19,8 @@ from django_apscheduler.models import DjangoJobExecution
 from simpleapp.models import Post
 
 logger = logging.getLogger(__name__)
+
+
 def send_posts(email_list, posts):
     # на случай, если там только один адрес, а не список
     if isinstance(email_list, str):
@@ -41,6 +43,7 @@ def send_posts(email_list, posts):
     # отправляем
     msg.send()
 
+
 # наша задача по выводу текста на экран
 def send_posts_to_email_weekly():
     """
@@ -52,8 +55,7 @@ def send_posts_to_email_weekly():
     # здесь мы получаем queryset
     today = datetime.datetime.now()
     last_week = today - datetime.timedelta(days=7)
-    last_week_posts_qs = Post.objects.filter(pubData__gte=last_week)
-
+    last_week_posts_qs = Post.objects.filter(date__gte=last_week)
 
     # собираем в словарь список пользователей и список постов, которые им надо разослать
     posts_for_user = defaultdict(set)  # user -> posts
@@ -66,6 +68,7 @@ def send_posts_to_email_weekly():
     # непосредственно рассылка
     for user, posts in posts_for_user.items():
         send_posts(user.email, posts)
+
 
 # функция, которая будет удалять неактуальные задачи
 def delete_old_job_executions(max_age=604_800):

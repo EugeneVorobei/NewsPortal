@@ -52,9 +52,6 @@ class PostDetailView(DetailView):
     queryset = Post.objects.all()
 
     def get_context_data(self, **kwargs):
-        # context = super().get_context_data(**kwargs)
-        # context['user_is_subscribed'] = not self.request.user.groups.filter(name='authors').exists()
-        # return context
         context = super().get_context_data(**kwargs)
         id = self.kwargs.get('pk')
         categories = []
