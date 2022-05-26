@@ -158,15 +158,15 @@ ACCOUNT_FORMS = {'signup': 'sign.models.CommonSignupForm'}
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'mail'
-EMAIL_HOST_PASSWORD = 'password'
+EMAIL_HOST_USER = 'EvgeniVorobey'
+EMAIL_HOST_PASSWORD = '12wsxCDE#$'
 EMAIL_USE_SSL = True
 
 ADMINS = [
     ('Name', 'mail@mail.com'),
 ]
 
-SERVER_EMAIL = 'mail@yandex.ru'  # адрес отправителя
+SERVER_EMAIL = 'EvgeniVorobey@yandex.ru'  # адрес отправителя
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@yandex.ru' # если вы используете Яндекс, то не забудьте добавить + ‘@yandex.ru’
@@ -183,3 +183,11 @@ CELERY_RESULT_BACKEND = 'redis://:YTrPmvwBkRWASfCKBZoSEGfEYpIwQrYk@redis-17306.c
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'), # Указываем, куда будем сохранять кэшируемые файлы! Не забываем создать папку cache_files внутри папки с manage.py!
+    }
+}
