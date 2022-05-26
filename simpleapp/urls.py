@@ -6,7 +6,7 @@ urlpatterns = [
     path('', cache_page(60)(NewsList.as_view())),
     path('news/', cache_page(60)(NewsList.as_view())),
     path('search/', Search.as_view()),
-    path('<int:pk>/', cache_page(60*5)(PostDetailView.as_view()), name='post_detail'),
+    path('<int:pk>/', PostDetailView.as_view(), name='post_detail'),
     path('add/', PostCreateView.as_view(), name='post_add'),
     path('<int:pk>/edit', PostUpdateView.as_view(), name='post_update'),
     path('<int:pk>/delete', PostDeleteView.as_view(), name='post_delete'),
