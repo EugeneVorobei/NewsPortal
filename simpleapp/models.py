@@ -80,7 +80,7 @@ class Comment(models.Model):
     rating_comment = models.IntegerField('рейтинг', default=0)
 
     def __str__(self):
-        return self.post.username
+        return f'{self.user.username}: {self.text_comment[:20]}'
 
     def like(self):
         self.rating_comment += 1
