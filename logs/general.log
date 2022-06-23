@@ -1,0 +1,8 @@
+2022-06-23 13:23:13,508 INFO autoreload Watching for file changes with StatReloader
+2022-06-23 13:23:50,539 INFO autoreload Watching for file changes with StatReloader
+2022-06-23 13:23:54,821 INFO basehttp "GET / HTTP/1.1" 200 8691
+2022-06-23 13:23:54,938 INFO basehttp "GET /static/css/styles.css HTTP/1.1" 200 206521
+2022-06-23 13:23:55,211 WARNING basehttp "GET /favicon.ico HTTP/1.1" 404 3902
+2022-06-23 13:24:07,561 WARNING basehttp "GET /ddd HTTP/1.1" 404 3878
+2022-06-23 13:24:18,119 INFO basehttp "GET /37/ HTTP/1.1" 200 5586
+2022-06-23 13:24:21,881 INFO basehttp "GET /accounts/login/ HTTP/1.1" 200 3777
